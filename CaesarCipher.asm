@@ -8,13 +8,13 @@ option: .space 2				#
 word: .space 51					#deklaracja zmiennych
 answer: .space 51				#
 
-.macro print_string(%value)			#funkcja wypisuj¹ca stringa podanego przy wywo³aniu
+.macro print_string(%value)			#funkcja wypisujÄ…ca stringa podanego przy wywoÅ‚aniu
 	li $v0, 4				#zmiana na wypisanie stringa
-	la $a0, %value				#przekazanie wartoœci do przepisania
+	la $a0, %value				#przekazanie wartoÅ›ci do przepisania
 	syscall 				#wypisanie
 .end_macro 
 
-.macro getInputString(%variable,%size)		#funkcja pobjeraj¹ca Stringa od u¿ytkownika pod podana zmienna
+.macro getInputString(%variable,%size)		#funkcja pobjerajÄ…ca Stringa od uÅ¼ytkownika pod podana zmienna
 	la $a0, %variable				# do jakiego miejsca przenosimy wczytana wartosc
 	li $a1, %size				# ile znakow pobieramy
 	li $v0, 8				# ustawienie na wczytanie tekstu
@@ -46,7 +46,7 @@ getKey:
     	bgt $v0,25, inputError			#
 	blt $v0, 0, inputError			# Sprawdzenie czy klucz zostal wybrany prawidlowo
 	
-    	move $t1, $v0				#przesuniêcie klucza do $t1
+    	move $t1, $v0				#przesuniÄ™cie klucza do $t1
     	
     	la $t2, word				# przepisanie poczatku word-a do $t7
 	li $t3,0				# iterator po nowym tekscie
@@ -104,7 +104,7 @@ result:
 	print_string(resultText)		#wypisanie wynik
 	print_string(answer)			#wypisanie wyniku
 	
-	li $v0, 10				#ustawinie na zakoñczenie programu
-	syscall 				#zakoñczenie programu
+	li $v0, 10				#ustawinie na zakoÅ„czenie programu
+	syscall 				#zakoÅ„czenie programu
 
 	
