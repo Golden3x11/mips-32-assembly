@@ -5,24 +5,24 @@ outputAnswer: .asciiz "\nWynik ze stosu:"
 outputTheSameChars: .asciiz "\nIlosc jednakowych znakow: "
 outputNotTheSameChars: .asciiz "\nIlosc roznych znakow: "
 inputError: .asciiz "\nPodane zdania nie sa tej samej dlugosci\n"
-askExit: .asciiz "Czy kontynuowaæ? [0]-nie [1]-tak: "
+askExit: .asciiz "Czy kontynuowaÄ‡? [0]-nie [1]-tak: "
 first: .space 51
 second: .space 51
 answer: .space 51
 
-.macro printString(%value)			#funkcja wypisuj¹ca stringa podanego przy wywo³aniu
+.macro printString(%value)			#funkcja wypisujÄ…ca stringa podanego przy wywoÅ‚aniu
 	li $v0, 4				#zmiana na wypisanie stringa
-	la $a0, %value				#przekazanie wartoœci do przepisania
+	la $a0, %value				#przekazanie wartoÅ›ci do przepisania
 	syscall 				#wypisanie
 .end_macro 
 
-.macro printInt(%value)				#funkcja wypisuj¹ca inta podanego przy wywo³aniu
-	move $a0,%value				#przesuniêcie wyniku do rejstru %value
+.macro printInt(%value)				#funkcja wypisujÄ…ca inta podanego przy wywoÅ‚aniu
+	move $a0,%value				#przesuniÄ™cie wyniku do rejstru %value
 	li $v0, 1				#zmiana na wypisanie inta
 	syscall 				#wypisanie
 .end_macro 
 
-.macro getInputString(%variable)		#funkcja pobjeraj¹ca Stringa od u¿ytkownika pod podana zmienna
+.macro getInputString(%variable)		#funkcja pobjerajÄ…ca Stringa od uÅ¼ytkownika pod podana zmienna
 	la $a0, %variable			# do jakiego miejsca przenosimy wczytana wartosc
 	li $a1, 51				# ile znakow pobieramy
 	li $v0, 8				# ustawienie na wczytanie tekstu
@@ -146,5 +146,5 @@ result:
 	jr $ra					#powrot do miejsca wywolania
 		
 end:
-	li $v0, 10				#ustawinie na zakoñczenie programu
-	syscall 				#zakoñczenie programu
+	li $v0, 10				#ustawinie na zakoÅ„czenie programu
+	syscall 				#zakoÅ„czenie programu
