@@ -106,13 +106,13 @@ compareSentences:
 		
 		beq $t6,$t7,equalChar		#jesli znaki sa takie same przeskok do equqalChar
 						#jesli rozne
-		addi $sp, $sp,-4		#zrobienie miejsca na stosie
-		sw $t4, 0($sp)			#zapis znaku $ na stosie
+		addi $sp, $sp,-1		#zrobienie miejsca na stosie
+		sb $t4, 0($sp)			#zapis znaku $ na stosie
 		b compareLoop			#powrot do poczatku petli
 		
 		equalChar:
 		addi $t2,$t2,1			#powiekszenie ilosci tych samych znakow
-		addi $sp, $sp,-4		#zrobienie miejsca na stosie
+		addi $sp, $sp,-1		#zrobienie miejsca na stosie
 		sb $t6, 0($sp)			#zapis znaku na stosie
 		b compareLoop			#powrot do poczatku petli
 	endCompareLoop:
@@ -125,8 +125,8 @@ readFromStack:
 	li $t1,0				#iterator bo buforze
 	readLoop:
 		beqz $t0,endReadLoop		#gdy juz nie ma zapisanych znakow na stosie
-		lw $t7,0($sp)			#wczytanie znaku ze stosie
-		add $sp,$sp,4			#zwolnienie miejsca na stosie
+		lb $t7,0($sp)			#wczytanie znaku ze stosie
+		add $sp,$sp,1			#zwolnienie miejsca na stosie
 		sb $t7,answer($t1)		#zapisanie znaku w buforze
 		
 		add $t1, $t1, 1			# Przesunienie wskaznika buforu
