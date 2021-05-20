@@ -108,7 +108,7 @@ compareSentences:
 		equalChar:
 		addi $t2,$t2,1			#powiekszenie ilosci tych samych znakow
 		addi $sp, $sp,-4		#zrobienie miejsca na stosie
-		sw $t6, 0($sp)			#zapis znaku na stosie
+		sb $t6, 0($sp)			#zapis znaku na stosie
 		b compareLoop			#powrot do poczatku petli
 	endCompareLoop:
 		add $v0,$zero,$t2		#przekazanie wartosci po skonczeniu metody -ilosc takich samych znakow	
@@ -144,7 +144,14 @@ result:
 	printInt($t1)				#wypisanie ile bylo roznych znakow
 	
 	jr $ra					#powrot do miejsca wywolania
-		
+ifEnd:
+	printString(askExit)			#zapytnaie się o skończenie programu
+	li $v0, 5				#ustawienie pobrania inta
+    	syscall					#pobranie inta
+    	move $t0, $v0				#przesunięcie inta na podany wcześniej rejestr
+	beq $t0,1,main				#jeżeli 1 jeszcze raz wykonujemy zadanie
+	beq $t0,0,end				#jeżeli 0 kończymy
+	j ifEnd					#niepoprawna opcja
 end:
 	li $v0, 10				#ustawinie na zakończenie programu
 	syscall 				#zakończenie programu
