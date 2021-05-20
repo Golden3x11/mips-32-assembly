@@ -2,6 +2,7 @@
 inputFirstSentence: .asciiz "\nPodaj pierwsze zdanie: "
 inputSecondSentence: .asciiz "\nPodaj drugie zdanie: "
 outputAnswer: .asciiz "\nWynik ze stosu:"
+outputStack: .asciiz "\nIlosc zaalokowanej pamieci: "
 outputTheSameChars: .asciiz "\nIlosc jednakowych znakow: "
 outputNotTheSameChars: .asciiz "\nIlosc roznych znakow: "
 inputError: .asciiz "\nPodane zdania nie sa tej samej dlugosci\n"
@@ -40,12 +41,12 @@ main:
 	jal compareSentences			#porownanie zdan i zapis na stos
 	
 	addu $s0, $zero, $v0			#ilos takich samych znakow przepisana na $s0
-	addu $s1, $zero, $v1			#ilosc znakow na stosie
 	
-	addu $a0,$zero,$s1			#przekazanie do metody ilosci znakow na stosie
+	addu $a0,$zero,$v1			#przekazanie do poczatku stosu
 	jal readFromStack			#odczyt ze stosu
 	
-	addu $a1,$zero,$s0			#przekazanie do metody tego samego $a0 i jeszcze $a0 z iloscia takich samych zankow
+	addu $a0,$zero,$v0			#przekazanie do metody ilosci znakow ile bylo na stosie
+	addu $a1,$zero,$s0			#przekazanie do metody $a0 z iloscia takich samych zankow
 	jal result				#metoda wypisujaca wynik
 	
 	j end					#koniec
@@ -81,8 +82,8 @@ endOfTheSentences:
 		printString(inputError)		#wypisanie bledu
 		j ifEnd				#przeskok do procedury ifEnd
 	endLengthLoop:
-		subu $t0, $t0, 1		# Odjecie 0 i konca lini
-		subu $t1, $t1, 1		# Odjecie 0 i konca lini
+		subu $t0, $t0, 1		# Odjecie 1 znaku
+		subu $t1, $t1, 1		# Odjecie 1 znaku
 		addu $v0, $zero, $t0		# Zwrcanie wskaznika na ostatni normalny znak zdania 1
 		addu $v1, $zero, $t1		# -||- zdania 2
 	jr $ra					#powrot do miejsca wywolania
@@ -92,7 +93,7 @@ compareSentences:
 	addu $t1, $zero, $a1			#-||- zdania 2
 	
 	li  $t2,0				#ile takich samych znakow
-	li  $t3,0				#ile znakow na stosie
+	add $t3,$zero,$sp			#poztek stosu
 	li  $t4,36				# $ w ascii
 	compareLoop:
 		lb $t6,($t0)			#wczytanie kolejnego znaku
@@ -102,7 +103,7 @@ compareSentences:
 		
 		sub $t0, $t0, 1			#dekrementacja iteratora
 		sub $t1, $t1, 1			#       -||-
-		addi $t3,$t3,1			#powiekszenie ilosci znakow na stosie
+	
 		
 		beq $t6,$t7,equalChar		#jesli znaki sa takie same przeskok do equqalChar
 						#jesli rozne
@@ -117,34 +118,35 @@ compareSentences:
 		b compareLoop			#powrot do poczatku petli
 	endCompareLoop:
 		add $v0,$zero,$t2		#przekazanie wartosci po skonczeniu metody -ilosc takich samych znakow	
-		add $v1,$zero,$t3		#-ilosc miejsca na stosie na znaki
+		add $v1,$zero,$t3		#poczatek stosu
 	jr $ra					#powrot do miejsca wywolania
 	
 readFromStack:
-	add $t0,$zero,$a0			#wczytanie ilosci znakow na stosie
+	add $t0,$zero,$a0			#wczytanie poczatku stosu przed wczytaniem
+	add $t2,$zero,$sp			#nr stosu ze znakami
 	li $t1,0				#iterator bo buforze
 	readLoop:
-		beqz $t0,endReadLoop		#gdy juz nie ma zapisanych znakow na stosie
+		beq $t0,$sp,endReadLoop		#gdy juz nie ma zapisanych znakow na stosie
 		lb $t7,0($sp)			#wczytanie znaku ze stosie
 		add $sp,$sp,1			#zwolnienie miejsca na stosie
 		sb $t7,answer($t1)		#zapisanie znaku w buforze
 		
 		add $t1, $t1, 1			# Przesunienie wskaznika buforu
-		sub $t0, $t0, 1			# Zmniejszenie ilosci elementow w stosie
 		b readLoop
-	endReadLoop:				
-		li $t7, 10			#dodanie znaku konca lini w ascii 10
-		sb $t7,answer($t1)		#
-		add $t1, $t1, 1			# Przesunienie wskaznika buforu
+	endReadLoop:
+		sub $t0,$t0,$t2				
+		add $v0,$zero,$t0		#przekazanie wartosci po skonczeniu metody -ilosc takich samych znakow	
 		sb $zero ,answer($t1)		#dodaniw znaku w ascii 0
 		jr $ra				# Powrot do miejsca wywolania
 result:
-	add $t0,$zero,$a1			#pobranie z $a0 ilosci tych samych znakow
-	sub $t1,$a0,$t0				#obliczenie ilosci roznych znakow (suma znakow-liczba tych samych)
+	add $t0,$a0,$zero
+	sub $t1,$a0,$a1				#obliczenie ilosci roznych znakow (suma znakow-liczba tych samych)
 	printString(outputAnswer)		#
 	printString(answer)			#wypisanie wyniku
+	printString(outputStack)		#
+	printInt($t0)				#wypisanie zaalokowanej pamieci
 	printString(outputTheSameChars)		#
-	printInt($t0)				#wypisanie ile bylo tych samych znakow
+	printInt($a1)				#wypisanie ile bylo tych samych znakow
 	printString(outputNotTheSameChars)	#
 	printInt($t1)				#wypisanie ile bylo roznych znakow
 	
