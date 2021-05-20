@@ -64,20 +64,25 @@ endOfTheSentences:
 	lengthLoop:				#petla badajaca dlugosc
 		lb $t6,($t0)			#pobranie do $t6 znaku z pod wartosci $t0 -1 zdanie
 		lb $t7,($t1)			#tak jak wyzej tylko dla 2 zdania
-		beqz $t6,endIfFirstEnd		#jezeli pierwszy wyraz sie skonczy
+		beq $t6,10,endIfFirstEnd10	#jezeli pierwszy wyraz sie skonczy koncem lini
+		beq $t7,10,endIfError		#jezeli 2 zdanie sie skonczy przed 1 to wiadomo ze sa roznej dlugosci
+		beqz $t6,endIfFirstEnd0		#jezeli pierwszy wyraz sie skonczy 0
 		beqz $t7,endIfError		#jezeli 2 zdanie sie skonczy przed 1 to wiadomo ze sa roznej dlugosci
 		addi $t0,$t0,1			#inkrementacja iteratora
 		addi $t1,$t1,1			#inkrementacja iteratora
 		b lengthLoop			#powrot do petli
-		
-	endIfFirstEnd:				#przypadek gdy 1 zdanie sie skonczy		
+	
+	endIfFirstEnd10:			#przypadek gdy 1 zdanie sie skonczy		
+		beq $t7,10,endLengthLoop	#gdy zdanie 2 sie skonczylo przechodzimy do zamiany na stosie
+		b endIfError
+	endIfFirstEnd0:				#przypadek gdy 1 zdanie sie skonczy		
 		beqz $t7,endLengthLoop		#gdy zdanie 2 sie skonczylo przechodzimy do zamiany na stosie
 	endIfError:				#gdy zdanie 1 lub 2 jest dluzsze
 		printString(inputError)		#wypisanie bledu
 		j ifEnd				#przeskok do procedury ifEnd
 	endLengthLoop:
-		subu $t0, $t0, 2		# Odjecie 0 i konca lini
-		subu $t1, $t1, 2		# Odjecie 0 i konca lini
+		subu $t0, $t0, 1		# Odjecie 0 i konca lini
+		subu $t1, $t1, 1		# Odjecie 0 i konca lini
 		addu $v0, $zero, $t0		# Zwrcanie wskaznika na ostatni normalny znak zdania 1
 		addu $v1, $zero, $t1		# -||- zdania 2
 	jr $ra					#powrot do miejsca wywolania
