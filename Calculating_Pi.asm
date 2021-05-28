@@ -5,9 +5,9 @@ askExit: .asciiz "\nCzy kontynuowac? [0]-nie [1]-tak: "
 result: .asciiz "\nPi="
 doubles: .double 1.0, 2.0, 4.0, 0.0
 
-.macro printString(%value)			#funkcja wypisuj¹ca stringa podanego przy wywo³aniu
+.macro printString(%value)			#funkcja wypisujÄ…ca stringa podanego przy wywoÅ‚aniu
 	li $v0, 4				#zmiana na wypisanie stringa
-	la $a0, %value				#przekazanie wartoœci do przepisania
+	la $a0, %value				#przekazanie wartoÅ›ci do przepisania
 	syscall 				#wypisanie
 .end_macro 
 .text
@@ -24,7 +24,7 @@ getAccuracy:
 	printString(accuracy)
 	li $v0, 5				# zmiana na pobranie inta
 	syscall 				# pobranie
-	move $t0, $v0				# przesuniêcie wyniku do rejstru %register
+	move $t0, $v0				# przesuniÄ™cie wyniku do rejstru %register
 	ble $t0,0,main				#blad dokladnosci
 	jr $ra
 	
@@ -61,20 +61,20 @@ calculate:
 	endLoop:
 		addi $sp, $sp,12		#zluzowanie stosu
 		ldc1 $f4,doubles+16		#$f4=4.0
-		mul.d $f10,$f10,$f4		#mno¿ymy wynik *4 i dostajemy pi
+		mul.d $f10,$f10,$f4		#mnoÅ¼ymy wynik *4 i dostajemy pi
 		li $v0, 3			
 		mov.d $f12, $f10		#wypisanie wyniku
 		syscall
 		
 ifEnd:
-	printString(askExit)			#zapytnaie siê o skoñczenie programu
+	printString(askExit)			#zapytnaie siÄ™ o skoÅ„czenie programu
 	li $v0, 5				#ustawienie pobrania inta
     	syscall					#pobranie inta
-    	move $t0, $v0				#przesuniêcie inta na podany wczeœniej rejestr
-	beq $t0,1,main				#je¿eli 1 jeszcze raz wykonujemy zadanie
-	beq $t0,0,end				#je¿eli 0 koñczymy
+    	move $t0, $v0				#przesuniÄ™cie inta na podany wczeÅ›niej rejestr
+	beq $t0,1,main				#jeÅ¼eli 1 jeszcze raz wykonujemy zadanie
+	beq $t0,0,end				#jeÅ¼eli 0 koÅ„czymy
 	printString(error)			#wypisanie ze blad wartosci
 	j ifEnd					#niepoprawna opcja
 end:
-	li $v0, 10				#ustawinie na zakoñczenie programu
-	syscall 				#zakoñczenie programu
+	li $v0, 10				#ustawinie na zakoÅ„czenie programu
+	syscall 				#zakoÅ„czenie programu
