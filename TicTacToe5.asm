@@ -1,6 +1,6 @@
 .data
 errorInputTxt: .asciiz "\nNiepoprawny wybor\n"
-selectSymbolTxt: .asciiz "\nKtóry znak wybierasz 'x' lub 'o': "
+selectSymbolTxt: .asciiz "\nKtÃ³ry znak wybierasz 'x' lub 'o': "
 wrongSymbolTxt: .asciiz "\nNiepoprawny wybor znaku\n"
 selectNrOfRoundsTxt: .asciiz "\nWybierz ilosc rund (1-5): "
 userActionTxt: .asciiz "\nPodaj pozycje\n"
@@ -18,23 +18,23 @@ gameResult: .word 0 0 0
 						#k-kolumna #w-wiersz #p-przekatna
 helpingTable: .word 0, 0, 0, 0, 0, 0, 0, 0 	# k1, k2, k3, w1, w2, w3, p1, p2
 
-.macro printString(%value)			#funkcja wypisuj¹ca stringa podanego przy wywo³aniu
+.macro printString(%value)			#funkcja wypisujÄ…ca stringa podanego przy wywoÅ‚aniu
 	li $v0, 4				#zmiana na wypisanie stringa
-	la $a0, %value				#przekazanie wartoœci do przepisania
+	la $a0, %value				#przekazanie wartoÅ›ci do przepisania
 	syscall 				#wypisanie
 .end_macro 
 
-.macro getInt					#funkcja pobjeraj¹ca inta od u¿ytkownika
+.macro getInt					#funkcja pobjerajÄ…ca inta od uÅ¼ytkownika
 	li $v0, 5				#ustawienie pobrania inta
     	syscall					#pobranie inta
 .end_macro
 
-.macro getChar					#funkcja pobjeraj¹ca char od u¿ytkownika
+.macro getChar					#funkcja pobjerajÄ…ca char od uÅ¼ytkownika
 	li $v0, 12				#ustawienie pobrania char
     	syscall					#pobranie chara
 .end_macro
 
-.macro printCharAndSpace			#funkcja wypisujaca char-a od u¿ytkownika pod podany rejestr
+.macro printCharAndSpace			#funkcja wypisujaca char-a od uÅ¼ytkownika pod podany rejestr
 	li $v0, 11				#ustawienie wypisania char-a
     	syscall					#pobranie inta
     	li $a0, 32				#
@@ -51,7 +51,7 @@ helpingTable: .word 0, 0, 0, 0, 0, 0, 0, 0 	# k1, k2, k3, w1, w2, w3, p1, p2
 
 .text
 main: 
-	jal selectNrOfRounds			# Zapytanie siê o liczbe rund
+	jal selectNrOfRounds			# Zapytanie siÄ™ o liczbe rund
 	move $s0, $v0				# Zapamietanie ilosci rund
 	
 	jal selectSymbol			# Zapytanie o symbol
@@ -70,7 +70,7 @@ selectNrOfRounds:
 	subi $v0,$v0,48				#zmiana na inta
 	jr $ra					# Powrot do main	
 wrongNrOfRounds:
-	printString(errorInputTxt)		# wypisanie b³edu
+	printString(errorInputTxt)		# wypisanie bÅ‚edu
 	j selectNrOfRounds			# Ponowne zapytanie o ilosc rund
 
 selectSymbol: 					# Przypisanie znaku
@@ -79,7 +79,7 @@ selectSymbol: 					# Przypisanie znaku
 	beq $v0, 120, setXUser			# 120 = x w ascii
 	beq $v0, 111, setOUser			# 111 = o w ascii
 	
-	printString(wrongSymbolTxt)		# z³y symbol 
+	printString(wrongSymbolTxt)		# zÅ‚y symbol 
 	j selectSymbol				# zapytanie jeszcze raz
 	
 	setXUser:
@@ -183,7 +183,7 @@ getUserAction:
 	bgt $t7, 57, wrongActionError		# Wieksze od 9 w ascii
 	
 	subi $t7, $t7, 49			# $t7 = liczba w ascii -49
-	add $t6, $s1, $t7			# Adres w pamiêci do wybranej pozycji w $t6
+	add $t6, $s1, $t7			# Adres w pamiÄ™ci do wybranej pozycji w $t6
 	
 	lb $t5, 0($t6)				# wczytanie znaku z miejsca
 	bne $t5, 45, wrongActionError		# Jezeli wybor !='-' to nie puste miejsce
@@ -241,7 +241,7 @@ updateHelpingTable:				# $a0= (1 gracz) lub (-1 komputer)
 	
 addControlPoint:
 	mul $t7, $t7, 4				# 
-	lw $t6, helpingTable($t7)		#Aktualizacja puntków kontrolnych 
+	lw $t6, helpingTable($t7)		#Aktualizacja puntkÃ³w kontrolnych 
 	add $t6, $t6, $a0			# zmaina 1 to gracz
 	sw $t6, helpingTable($t7)		# zmiana 2 to komuter
 	jr $ra
@@ -287,7 +287,7 @@ getComputerAction:
 	addi $t7, $t7, 4			# iterator +4 
 	blt $t7, 32, computerActionLoop2		# 
 
-						# Sprawdzamy w kolejnosci: naro¿niki œrodek a potem œrodki krawedzi
+						# Sprawdzamy w kolejnosci: naroÅ¼niki Å›rodek a potem Å›rodki krawedzi
 	li $t4, 45 				# 45 = '-' - wolne pole
 	
 	checkPos($s1,0)				# sprawdzamy naroznik 
@@ -329,7 +329,7 @@ checkPosAction:					#albo blokada albo wygrana
 	checkPos($t3,1)
 	checkPos($t3,2)
 	
-	checkPosDiagonal1:			#1 przek¹tna szukanie miejsca wygranej
+	checkPosDiagonal1:			#1 przekÄ…tna szukanie miejsca wygranej
 	checkPos($s1,0)		
 	checkPos($s1,4)
 	checkPos($s1,8)
